@@ -5,8 +5,9 @@ import { ECParameters } from "@peculiar/asn1-ecc";
 /**
  * Parse certificate EC parameters and generate curve object
  * @param params
+ * @param lowS
  */
-export declare const curveFromECParams: (params: ECParameters) => Readonly<{
+export declare const curveFromECParams: (params: ECParameters, lowS?: boolean) => Readonly<{
     create: (hash: import("@noble/curves/abstract/utils").CHash) => import("@noble/curves/abstract/weierstrass").CurveFn;
     CURVE: ReturnType<(curve: import("@noble/curves/abstract/weierstrass").CurveType) => Readonly<{
         readonly nBitLength: number;

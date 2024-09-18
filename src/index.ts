@@ -17,8 +17,9 @@ const bufToBigInt = (data: Buffer) => {
 /**
  * Parse certificate EC parameters and generate curve object
  * @param params 
+ * @param lowS
  */
-export const curveFromECParams = (params: ECParameters) => {
+export const curveFromECParams = (params: ECParameters, lowS: boolean = false) => {
     if(!params.specifiedCurve) throw new Error("Only explicit ECC parameters supported");
     if(params.specifiedCurve.fieldID.fieldType != "1.2.840.10045.1.1") throw new Error("Only explicit [X9.62] schema supported");
 
@@ -31,7 +32,8 @@ export const curveFromECParams = (params: ECParameters) => {
         n: bufToBigInt(Buffer.from(params.specifiedCurve.order)),
         Gx: bufToBigInt(base.subarray(0, base.length/2)),
         Gy: bufToBigInt(base.subarray(base.length/2)),
-        h: BigInt(params.specifiedCurve.cofactor as unknown as number)
+        h: BigInt(params.specifiedCurve.cofactor as unknown as number),
+        lowS: lowS
     } as const, sha512) // random hash, because it is not used here, but it is needed as a parameter
 }
 
