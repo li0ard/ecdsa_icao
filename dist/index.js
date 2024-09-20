@@ -5,6 +5,24 @@ import { sha224, sha256 } from "@noble/hashes/sha256";
 import { sha384, sha512 } from "@noble/hashes/sha512";
 import { ECParameters } from "@peculiar/asn1-ecc";
 import TLV from "node-tlv";
+import { p256, secp256r1 } from "@noble/curves/p256";
+import { p384, secp384r1 } from "@noble/curves/p384";
+import { p521, secp521r1 } from "@noble/curves/p521";
+import { secp256k1 } from "@noble/curves/secp256k1";
+import { ed25519 } from "@noble/curves/ed25519";
+import { ed448 } from "@noble/curves/ed448";
+/**
+ * Identify curve by `p` field
+ * @param params
+ */
+export const identifyCurveByP = (params) => {
+    let curves = [p256, p384, p521, secp256k1, secp256r1, secp384r1, secp521r1, ed25519, ed448];
+    let curvesObj = {};
+    for (let i of curves) {
+        curvesObj[i.CURVE.p.toString()] = i;
+    }
+    return curvesObj[BigInt(`0x${TLV.parse(Buffer.from(params.specifiedCurve?.fieldID.parameters)).value}`).toString()];
+};
 /**
  * Convert buffer to BigInt
  * @param data Input buffer
@@ -47,14 +65,4 @@ export const hashFromECDSAOID = (oid) => {
         "1.2.840.10045.4.3.4": sha512,
     };
     return algorithms[oid];
-};
-/**
- * Verify signature by public key and hash of data
- * @param curve Curve object
- * @param pk Public key
- * @param hash Hash of data
- * @param sig Signature
- */
-export const verify = (curve, pk, hash, sig) => {
-    return curve.verify(sig, hash, pk);
 };

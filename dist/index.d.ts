@@ -3,6 +3,11 @@ import { sha256 } from "@noble/hashes/sha256";
 import { sha512 } from "@noble/hashes/sha512";
 import { ECParameters } from "@peculiar/asn1-ecc";
 /**
+ * Identify curve by `p` field
+ * @param params
+ */
+export declare const identifyCurveByP: (params: ECParameters) => any;
+/**
  * Parse certificate EC parameters and generate curve object
  * @param params
  * @param lowS
@@ -63,11 +68,3 @@ export declare const curveFromECParams: (params: ECParameters, lowS?: boolean) =
  * @param oid Signature algorithm OID
  */
 export declare const hashFromECDSAOID: (oid: string) => typeof sha1 | typeof sha256 | typeof sha512;
-/**
- * Verify signature by public key and hash of data
- * @param curve Curve object
- * @param pk Public key
- * @param hash Hash of data
- * @param sig Signature
- */
-export declare const verify: (curve: any, pk: Buffer, hash: Buffer, sig: Buffer) => boolean;

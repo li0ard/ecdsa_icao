@@ -12,6 +12,12 @@ bun add github:li0ard/ecdsa_icao
 
 ```ts
 /**
+ * Identify curve by `p` field
+ * @param params 
+ */
+export const identifyCurveByP = (params: ECParameters) => {}
+
+/**
  * Parse certificate EC parameters and generate curve object
  * @param params 
  */
@@ -22,13 +28,4 @@ export const curveFromECParams = (params: ECParameters) => {}
  * @param oid Signature algorithm OID
  */
 export const hashFromECDSAOID = (oid: string): typeof sha1 | typeof sha256 | typeof sha512 => {}
-
-/**
- * Verify signature by public key and hash of data
- * @param curve Curve object
- * @param pk Public key
- * @param hash Hash of data
- * @param sig Signature
- */
-export const verify = (curve: any, pk: Buffer, hash: Buffer, sig: Buffer): boolean => {}
 ```
