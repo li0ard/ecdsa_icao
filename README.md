@@ -1,6 +1,6 @@
 # ecdsa_icao
 
-This is a pure JS implementation of ECDSA for eMRTD certificates (ICAO 9303 p.12) with explicit ECC parameters 
+This is a pure JS implementation of ECDSA features for eMRTD certificates (ICAO 9303 p.12) with explicit ECC parameters 
 
 > [Docs](https://li0ard.github.io/ecdsa_icao)
 
