@@ -6,19 +6,19 @@ import { sha384, sha512 } from "@noble/hashes/sha512";
 import { ECParameters } from "@peculiar/asn1-ecc";
 import TLV from "node-tlv";
 
-import { p256, secp256r1 } from "@noble/curves/p256"
-import { p384, secp384r1 } from "@noble/curves/p384"
-import { p521, secp521r1 } from "@noble/curves/p521"
+import { p256 } from "@noble/curves/p256"
+import { p384 } from "@noble/curves/p384"
+import { p521 } from "@noble/curves/p521"
 import { secp256k1 } from "@noble/curves/secp256k1"
 import { ed25519 } from "@noble/curves/ed25519"
 import { ed448 } from "@noble/curves/ed448"
 
 /**
  * Identify curve by `p` field
- * @param params 
+ * @param params Public key parameters
  */
 export const identifyCurveByP = (params: ECParameters) => {
-    let curves = [p256, p384, p521, secp256k1, secp256r1, secp384r1, secp521r1, ed25519, ed448]
+    let curves = [p256, p384, p521, secp256k1, ed25519, ed448]
     let curvesObj: {[key: string]: any} = {}
 
     for(let i of curves) {
@@ -38,8 +38,8 @@ const bufToBigInt = (data: Buffer) => {
 
 /**
  * Parse certificate EC parameters and generate curve object
- * @param params 
- * @param lowS
+ * @param params Public key parameters
+ * @param lowS Low order
  */
 export const curveFromECParams = (params: ECParameters, lowS: boolean = false) => {
     if(!params.specifiedCurve) throw new Error("Only explicit ECC parameters supported");
@@ -61,7 +61,7 @@ export const curveFromECParams = (params: ECParameters, lowS: boolean = false) =
 
 /**
  * Get hash function by signature algorithm OID
- * @param oid Signature algorithm OID
+ * @param oid OID of signature algorithm
  */
 export const hashFromECDSAOID = (oid: string): typeof sha1 | typeof sha256 | typeof sha512 => {
     let algorithms: {[key: string]: typeof sha1 | typeof sha256 | typeof sha512} = {
