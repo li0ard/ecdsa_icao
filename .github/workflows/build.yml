@@ -1,0 +1,37 @@
+name: Build package
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '*.md' # ignore changes to readmes
+      - '*.js' # ignore js files
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun i
+      
+      - name: Build package
+        run: bun run build
+      
+      - name: Commit JS files
+        run: |
+          set +e
+          git add dist/
+          git config user.name "$(git --no-pager log --format=format:'%an' -n 1)"
+          git config user.email "$(git --no-pager log --format=format:'%ae' -n 1)"
+          git commit -m "build: build package"
+          git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY"

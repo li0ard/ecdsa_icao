@@ -1,38 +1,17 @@
 import { createCurve } from "@noble/curves/_shortw_utils";
 import { Field } from "@noble/curves/abstract/modular";
+import { type CurveFn } from "@noble/curves/abstract/weierstrass";
 import { sha1 } from "@noble/hashes/sha1";
 import { sha224, sha256 } from "@noble/hashes/sha256";
 import { sha384, sha512 } from "@noble/hashes/sha512";
-import { ECParameters } from "@peculiar/asn1-ecc";
+import { type ECParameters } from "@peculiar/asn1-ecc";
 import TLV from "node-tlv";
-
-import { p256 } from "@noble/curves/p256"
-import { p384 } from "@noble/curves/p384"
-import { p521 } from "@noble/curves/p521"
-import { secp256k1 } from "@noble/curves/secp256k1"
-import { ed25519 } from "@noble/curves/ed25519"
-import { ed448 } from "@noble/curves/ed448"
-
-/**
- * Identify curve by `p` field
- * @param params Public key parameters
- */
-export const identifyCurveByP = (params: ECParameters) => {
-    let curves = [p256, p384, p521, secp256k1, ed25519, ed448]
-    let curvesObj: {[key: string]: any} = {}
-
-    for(let i of curves) {
-        curvesObj[i.CURVE.p.toString()] = i
-    }
-    return curvesObj[BigInt(`0x${TLV.parse(Buffer.from(params.specifiedCurve?.fieldID.parameters as ArrayBuffer)).value}`).toString()]
-}
-
 
 /**
  * Convert buffer to BigInt
  * @param data Input buffer
  */
-const bufToBigInt = (data: Buffer) => {
+const bufToBigInt = (data: Buffer): bigint => {
     return BigInt(`0x${data.toString("hex")}`)
 }
 
@@ -41,12 +20,12 @@ const bufToBigInt = (data: Buffer) => {
  * @param params Public key parameters
  * @param lowS Low order
  */
-export const curveFromECParams = (params: ECParameters, lowS: boolean = false) => {
+export const curveFromECParams = (params: ECParameters, lowS: boolean = false): CurveFn => {
     if(!params.specifiedCurve) throw new Error("Only explicit ECC parameters supported");
     if(params.specifiedCurve.fieldID.fieldType != "1.2.840.10045.1.1") throw new Error("Only explicit [X9.62] schema supported");
 
     let base = Buffer.from(params.specifiedCurve.base.buffer).subarray(1)
-    
+
     return createCurve({
         a: bufToBigInt(Buffer.from(params.specifiedCurve.curve.a)),
         b: bufToBigInt(Buffer.from(params.specifiedCurve.curve.b)),
@@ -74,4 +53,3 @@ export const hashFromECDSAOID = (oid: string): typeof sha1 | typeof sha256 | typ
     }
     return algorithms[oid]
 }
-
