@@ -1,28 +1,11 @@
 import { createCurve } from "@noble/curves/_shortw_utils";
 import { Field } from "@noble/curves/abstract/modular";
+import {} from "@noble/curves/abstract/weierstrass";
 import { sha1 } from "@noble/hashes/sha1";
 import { sha224, sha256 } from "@noble/hashes/sha256";
 import { sha384, sha512 } from "@noble/hashes/sha512";
-import { ECParameters } from "@peculiar/asn1-ecc";
+import {} from "@peculiar/asn1-ecc";
 import TLV from "node-tlv";
-import { p256, secp256r1 } from "@noble/curves/p256";
-import { p384, secp384r1 } from "@noble/curves/p384";
-import { p521, secp521r1 } from "@noble/curves/p521";
-import { secp256k1 } from "@noble/curves/secp256k1";
-import { ed25519 } from "@noble/curves/ed25519";
-import { ed448 } from "@noble/curves/ed448";
-/**
- * Identify curve by `p` field
- * @param params
- */
-export const identifyCurveByP = (params) => {
-    let curves = [p256, p384, p521, secp256k1, secp256r1, secp384r1, secp521r1, ed25519, ed448];
-    let curvesObj = {};
-    for (let i of curves) {
-        curvesObj[i.CURVE.p.toString()] = i;
-    }
-    return curvesObj[BigInt(`0x${TLV.parse(Buffer.from(params.specifiedCurve?.fieldID.parameters)).value}`).toString()];
-};
 /**
  * Convert buffer to BigInt
  * @param data Input buffer
@@ -32,8 +15,8 @@ const bufToBigInt = (data) => {
 };
 /**
  * Parse certificate EC parameters and generate curve object
- * @param params
- * @param lowS
+ * @param params Public key parameters
+ * @param lowS Low order
  */
 export const curveFromECParams = (params, lowS = false) => {
     if (!params.specifiedCurve)
@@ -54,7 +37,7 @@ export const curveFromECParams = (params, lowS = false) => {
 };
 /**
  * Get hash function by signature algorithm OID
- * @param oid Signature algorithm OID
+ * @param oid OID of signature algorithm
  */
 export const hashFromECDSAOID = (oid) => {
     let algorithms = {
