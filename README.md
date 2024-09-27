@@ -16,5 +16,5 @@ bun add github:li0ard/ecdsa_icao
 import { curveFromECParams } from "@li0ard/ecdsa_icao"
 
 let certificate = new X509Certificate("./example.pem")
-let curve = curveFromECParams(certificate).subjectPublicKeyInfo
+let curve = curveFromECParams(certificate.subjectPublicKeyInfo.parameters)
 ```
