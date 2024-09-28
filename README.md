@@ -14,7 +14,10 @@ bun add github:li0ard/ecdsa_icao
 
 ```ts
 import { curveFromECParams } from "@li0ard/ecdsa_icao"
+import { AsnConvert } from "@peculiar/asn1-schema"
+import { CertificateChoices } from "@peculiar/asn1-cms"
+import fs from "fs"
 
-let certificate = new X509Certificate("./example.pem")
-let curve = curveFromECParams(certificate.subjectPublicKeyInfo.parameters)
+let certificate = AsnConvert.parse(fs.readFileSync("./cert.der"), CertificateChoices)
+let curve = curveFromECParams(certificate.tbsCertificate.subjectPublicKeyInfo.parameters)
 ```
