@@ -2,7 +2,7 @@
   "name": "@li0ard/ecdsa_icao",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -26,7 +26,9 @@
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "publishConfig": {
     "access": "public"
   },
